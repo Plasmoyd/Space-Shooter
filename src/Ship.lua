@@ -1,6 +1,4 @@
-local classes = require("classes")
 local Ship = classes.class()
-local Model = require("Model")
 
 function Ship:init(params)
     print("Ship init!")

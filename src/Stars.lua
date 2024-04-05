@@ -1,4 +1,3 @@
-local Model = require("Model")
 local Stars = classes.class()
 
 function Stars:init(params)

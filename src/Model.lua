@@ -1,4 +1,3 @@
-local AssetsManager = require("AssetsManager")
 local Model = {
     movement = {
         up = false,

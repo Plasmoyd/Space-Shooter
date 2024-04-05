@@ -8,14 +8,12 @@ io.stdout:setvbuf("no")
 
 ----EXAMPLES: INSTANTIARING A CLASS
 
-local ShipCls = require("Ship")
+require 'src/Dependencies'
+
+
 local ship = nil
 
-local StarsCls = require("Stars")
 local stars = nil
-
-local AssetsManager = require("AssetsManager")
-local Model = require("Model")
 
 local LEFT_KEY = "left"
 local RIGHT_KEY = "right"
