@@ -22,6 +22,11 @@ end
 
 function Stars:update(dt)
     
+    for _, star in pairs(self.starsArr) do
+      
+        star.y = (star.y + (self.speed * dt)) % Model.stage.stageHeight
+    
+    end
 end
 
 function Stars:draw()
@@ -36,9 +41,6 @@ function Stars:draw()
     
     
 end
-
-
-
 
 
 return Stars

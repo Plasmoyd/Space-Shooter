@@ -19,6 +19,7 @@ local LEFT_KEY = "left"
 local RIGHT_KEY = "right"
 local UP_KEY = "up"
 local DOWN_KEY = "down"
+local ESCAPE_KEY = "escape"
 
 
 function love.load()
@@ -57,6 +58,10 @@ function love.keypressed(key)
         Model.movement.up = true
     elseif key == DOWN_KEY then
         Model.movement.down = true
+    end
+    
+    if key == ESCAPE_KEY then
+        love.event.quit()
     end
 
 end
