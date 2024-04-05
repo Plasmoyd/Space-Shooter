@@ -6,21 +6,13 @@ require("mobdebug").start()
 --this is to make prints appear right away in zerobrane
 io.stdout:setvbuf("no")
 
-----EXAMPLES: INSTANTIARING A CLASS
-
 require 'src/Dependencies'
 
 
 local ship = nil
-
 local stars = nil
 
---local LEFT_KEY = "left"
---local RIGHT_KEY = "right"
---local UP_KEY = "up"
---local DOWN_KEY = "down"
---local ESCAPE_KEY = "escape"
-
+local scene = {}
 
 function love.load()
     print("love.load")
@@ -29,23 +21,53 @@ function love.load()
     eventManager = EventManager.new()
     stars = StarsCls.new( Model.starsParams)
     ship = ShipCls.new( Model.shipParams )
+    
+    instantiateObjectInScene(stars)
+    instantiateObjectInScene(ship)
+    
 end
 
 function love.update(dt)
    -- print("update")
-    ship:update(dt)
-    stars:update(dt)
+    for i = 1, #scene do
+      if scene[i].update then
+        scene[i]:update(dt)
+      end
+    end
 end
 
 
 function love.draw()
     --love.graphics.draw(AssetsManager.sprites.fireAngles, 0,0 )
-    stars:draw()
-    ship:draw()
-    
+    for i = 1, #scene do
+      if scene[i].draw then
+        scene[i]:draw()
+      end
+    end
     --love.graphics.print("You Win!", 180, 350)
 end
 
+function instantiateObjectInScene(object)
+    
+    if scene then
+      table.insert(scene, object)
+    end
+end
+
+function removeObjectFromScene(object)
+  
+    if not scene then
+      return
+    end
+    
+    for k, v in pairs(scene) do
+      
+      if v == object then
+        table.remove(scene, k)
+        return
+      end
+    end
+end
 
 function love.keypressed(key)
     print(key)
