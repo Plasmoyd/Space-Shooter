@@ -15,17 +15,18 @@ local ship = nil
 
 local stars = nil
 
-local LEFT_KEY = "left"
-local RIGHT_KEY = "right"
-local UP_KEY = "up"
-local DOWN_KEY = "down"
-local ESCAPE_KEY = "escape"
+--local LEFT_KEY = "left"
+--local RIGHT_KEY = "right"
+--local UP_KEY = "up"
+--local DOWN_KEY = "down"
+--local ESCAPE_KEY = "escape"
 
 
 function love.load()
     print("love.load")
     AssetsManager.init()
     Model.init()
+    eventManager = EventManager.new()
     stars = StarsCls.new( Model.starsParams)
     ship = ShipCls.new( Model.shipParams )
 end
@@ -63,6 +64,11 @@ function love.keypressed(key)
     if key == ESCAPE_KEY then
         love.event.quit()
     end
+    
+    if key == SPACEBAR_KEY then
+        EventManager:notify(ON_SPACEBAR_PRESSED)
+    end
+    
 
 end
 

@@ -8,6 +8,8 @@ function Ship:init(params)
     self.y = Model.stage.stageHeight / 2
     self.w = self.asset:getWidth()
     self.h = self.asset:getHeight()
+    
+    EventManager:subscribe(ON_SPACEBAR_PRESSED, self)
 end
 
 function Ship:update(dt)
@@ -50,6 +52,17 @@ function Ship:draw()
     local newX = self.x - (self.w/2)
     local newY = self.y - (self.h/2)
     love.graphics.draw(self.asset, newX,newY )
+end
+
+function Ship:onNotify(event)
+    
+    if event == ON_SPACEBAR_PRESSED then
+        Ship:shoot()
+    end
+end
+
+function Ship:shoot()
+    print("Ship is shooting")
 end
 
 return Ship
