@@ -1,17 +1,17 @@
-PoolObject = classes.class()
+local PoolObject = classes.class()
 
-function PoolObject:init(object)
+function PoolObject:init(params)
   
-  self.object = object
-  self.isActive = false
+  self.object = params.object
+  self.active = false
 end
 
 function PoolObject:setActive(isActive)
-  self.isActive = isActive  
+  self.active = isActive  
 end
 
 function PoolObject:isActive()
-  return self.isActive
+  return self.active
 end
 
 function PoolObject:getObject()

@@ -36,14 +36,14 @@ function EventManager:subscribe(event, subscriber)
 end
 
 
-function EventManager:notify(event)
+function EventManager:notify(event, args)
   
     local subscribers = instance.subscribers[event] or {}
     
     for _, subscriber in pairs(subscribers) do
       
       if subscriber.onNotify then
-          subscriber:onNotify(event)
+          subscriber:onNotify(event, args)
       end
     end
 end

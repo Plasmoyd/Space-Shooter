@@ -12,3 +12,4 @@ SPACEBAR_KEY = "space"
 
 --event constants
 ON_SPACEBAR_PRESSED = "spacebarPressed"
+ON_BULLET_DESTROYED = "bulletDestroyed"

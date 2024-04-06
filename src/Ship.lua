@@ -11,10 +11,11 @@ function Ship:init(params)
     self.rateOfFire = params.rateOfFire
     self.fireTimer = params.rateOfFire
     
-    self.bulletPool = Pool:new(params.bulletPoolSize)
+    self.bulletPool = Pool.new({ poolSize = params.bulletPoolSize})
     self:populateBulletPool()
     
     EventManager:subscribe(ON_SPACEBAR_PRESSED, self)
+    EventManager:subscribe(ON_BULLET_DESTROYED, self)
 end
 
 function Ship:update(dt)
@@ -64,11 +65,16 @@ function Ship:draw()
     love.graphics.draw(self.asset, newX,newY )
 end
 
-function Ship:onNotify(event)
+function Ship:onNotify(event, args)
+  
+    args = args or {}
     
     if event == ON_SPACEBAR_PRESSED then
         self:shoot()
+    elseif event == ON_BULLET_DESTROYED then
+        self.bulletPool:returnObject(args)
     end
+      
 end
 
 function Ship:shoot()
@@ -78,9 +84,14 @@ function Ship:shoot()
     end
     
     local yOffset = (self.h / 2)
-    Model.bulletParams.x = self.x
-    Model.bulletParams.y = self.y - yOffset
-    local bullet = Bullet.new(Model.bulletParams)
+    --Model.bulletParams.x = self.x
+    --Model.bulletParams.y = self.y - yOffset
+    
+    --local bullet = Bullet.new(Model.bulletParams)
+    local bullet = self.bulletPool:getObject()
+    local x = self.x
+    local y = self.y - yOffset
+    bullet:updatePosition(x, y)
     instantiateObjectInScene(bullet)
     
     self.fireTimer = 0
@@ -91,10 +102,9 @@ function Ship:handleTimer(dt)
 end
 
 function Ship:populateBulletPool()
-    
-    for i = 1, #self.bulletPool.poolSize do
+    for i = 1, self.bulletPool:getPoolSize() do
       local bullet = Bullet.new(Model.bulletParams)
-      self.bulletPool:AddObject(bullet)
+      self.bulletPool:addObject(bullet)
     end
 end
 

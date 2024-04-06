@@ -18,7 +18,8 @@ function Bullet:update(dt)
   
   --destroying the bullet if it's off screen
   if not self:isOnScreen() then
-    self:destroy()
+    removeObjectFromScene(self)
+    EventManager:notify(ON_BULLET_DESTROYED, self)
   end
 end
 
@@ -40,6 +41,14 @@ end
 
 function Bullet:destroy()
   self = nil
+end
+
+function Bullet:updatePosition(x, y)
+   
+   if x and y then
+     self.x = x
+     self.y = y
+   end
 end
 
 return Bullet

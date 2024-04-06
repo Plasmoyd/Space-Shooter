@@ -1,18 +1,21 @@
-Pool = classes.class()
+local Pool = classes.class()
 
-function Pool:init(poolSize)
-  
-  self.poolSize = poolSize
+function Pool:init(params)
+  self.poolSize = params.poolSize
   
   self.pool = {}
+  
+  print("poolSize: " .. self.poolSize .. " #self.pool: " .. #self.pool)
   
 end
 
 function Pool:getObject()
   
-  for _,poolObject in pairs(pool) do
+  for _,poolObject in pairs(self.pool) do
     
-    if not poolObject:isActive() then
+    local active = poolObject:isActive()
+    
+    if not active then
       
       poolObject:setActive(true)
       return poolObject:getObject()
@@ -23,7 +26,7 @@ function Pool:getObject()
 end
 
 function Pool:returnObject(object)
-  for _, poolObject in pairs(pool) do
+  for _, poolObject in pairs(self.pool) do
     
     if poolObject:getObject() == object then
       poolObject:setActive(false)
@@ -32,13 +35,18 @@ function Pool:returnObject(object)
 end
 
 function Pool:addObject(object)
-  if #pool >= poolSize then
+  
+  if #self.pool >= self.poolSize then
     return false
   end
   
-  poolObject = PoolObject:new(object)
+  local poolObject = PoolObject.new({object = object})
   table.insert(self.pool, poolObject)
   return true
+end
+
+function Pool:getPoolSize()
+  return self.poolSize
 end
 
 return Pool

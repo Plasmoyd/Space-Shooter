@@ -30,7 +30,7 @@ end
 function love.update(dt)
    -- print("update")
     for i = 1, #scene do
-      if scene[i].update then
+      if scene[i] and scene[i].update then
         scene[i]:update(dt)
       end
     end
@@ -60,10 +60,9 @@ function removeObjectFromScene(object)
       return
     end
     
-    for k, v in pairs(scene) do
-      
-      if v == object then
-        table.remove(scene, k)
+    for i = 1, #scene do
+      if scene[i] == object then
+        table.remove(scene, i)
         return
       end
     end
