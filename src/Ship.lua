@@ -11,6 +11,9 @@ function Ship:init(params)
     self.rateOfFire = params.rateOfFire
     self.fireTimer = params.rateOfFire
     
+    self.bulletPool = Pool:new(params.bulletPoolSize)
+    self:populateBulletPool()
+    
     EventManager:subscribe(ON_SPACEBAR_PRESSED, self)
 end
 
@@ -85,6 +88,14 @@ end
 
 function Ship:handleTimer(dt)
     self.fireTimer = self.fireTimer + dt
+end
+
+function Ship:populateBulletPool()
+    
+    for i = 1, #self.bulletPool.poolSize do
+      local bullet = Bullet.new(Model.bulletParams)
+      self.bulletPool:AddObject(bullet)
+    end
 end
 
 return Ship

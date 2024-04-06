@@ -11,7 +11,8 @@ local Model = {
 Model.shipParams = {
     assetName = "ship",
     speed = 500,
-    rateOfFire = 0.15
+    rateOfFire = 0.15,
+    bulletPoolSize = 20
 }
 
 Model.starsParams = {
