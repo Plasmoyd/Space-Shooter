@@ -8,12 +8,20 @@ function Ship:init(params)
     self.y = Model.stage.stageHeight / 2
     self.w = self.asset:getWidth()
     self.h = self.asset:getHeight()
+    self.rateOfFire = params.rateOfFire
+    self.fireTimer = params.rateOfFire
     
     EventManager:subscribe(ON_SPACEBAR_PRESSED, self)
 end
 
 function Ship:update(dt)
 
+    self:handleMovement(dt)
+    self:handleTimer(dt)
+    
+end
+
+function Ship:handleMovement(dt)
     local left = Model.movement.left
     local right = Model.movement.right
     local up = Model.movement.up
@@ -45,7 +53,6 @@ function Ship:update(dt)
     --ship can now move only within the borders of the screen
     self.x = clamp(self.x + (movementVector.x * self.speed * dt), self.w / 2, Model.stage.stageWidth - self.w / 2)
     self.y = clamp(self.y + (movementVector.y * self.speed * dt), self.h / 2, Model.stage.stageHeight - self.h / 2)
-    
 end
 
 function Ship:draw()
@@ -57,12 +64,27 @@ end
 function Ship:onNotify(event)
     
     if event == ON_SPACEBAR_PRESSED then
-        Ship:shoot()
+        self:shoot()
     end
 end
 
 function Ship:shoot()
-    print("Ship is shooting")
+  
+    if self.rateOfFire > self.fireTimer then
+      return
+    end
+    
+    local yOffset = (self.h / 2)
+    Model.bulletParams.x = self.x
+    Model.bulletParams.y = self.y - yOffset
+    local bullet = Bullet.new(Model.bulletParams)
+    instantiateObjectInScene(bullet)
+    
+    self.fireTimer = 0
+end
+
+function Ship:handleTimer(dt)
+    self.fireTimer = self.fireTimer + dt
 end
 
 return Ship
