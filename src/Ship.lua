@@ -2,6 +2,7 @@ local Ship = classes.class()
 
 function Ship:init(params)
     print("Ship init!")
+    self.id = PLAYER_ID
     self.speed = params.speed
     self.asset = params.asset
     self.x = Model.stage.stageWidth / 2
@@ -15,7 +16,7 @@ function Ship:init(params)
     self:populateBulletPool()
     
     EventManager:subscribe(ON_SPACEBAR_PRESSED, self)
-    EventManager:subscribe(ON_BULLET_DESTROYED, self)
+    EventManager:subscribe(ON_BULLET_DESTROYED..tostring(self.id), self)
 end
 
 function Ship:update(dt)
@@ -71,7 +72,7 @@ function Ship:onNotify(event, args)
     
     if event == ON_SPACEBAR_PRESSED then
         self:shoot()
-    elseif event == ON_BULLET_DESTROYED then
+    elseif event == ON_BULLET_DESTROYED..tostring(self.id) then
         self.bulletPool:returnObject(args)
     end
       
@@ -83,12 +84,13 @@ function Ship:shoot()
       return
     end
     
-    local yOffset = (self.h / 2)
-    --Model.bulletParams.x = self.x
-    --Model.bulletParams.y = self.y - yOffset
-    
-    --local bullet = Bullet.new(Model.bulletParams)
     local bullet = self.bulletPool:getObject()
+    
+    if not bullet then
+      return
+    end
+    
+    local yOffset = (self.h / 2)
     local x = self.x
     local y = self.y - yOffset
     bullet:updatePosition(x, y)
@@ -103,6 +105,7 @@ end
 
 function Ship:populateBulletPool()
     for i = 1, self.bulletPool:getPoolSize() do
+      Model.bulletParams.direction = PLAYER_BULLET_DIRECTION
       local bullet = Bullet.new(Model.bulletParams)
       self.bulletPool:addObject(bullet)
     end

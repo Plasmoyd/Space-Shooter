@@ -13,3 +13,14 @@ SPACEBAR_KEY = "space"
 --event constants
 ON_SPACEBAR_PRESSED = "spacebarPressed"
 ON_BULLET_DESTROYED = "bulletDestroyed"
+ON_ENEMY_BULLET_DESTROYED = "enemyBulletDestroyed"
+
+--bullet direction constants
+
+PLAYER_BULLET_DIRECTION = -1
+ENEMY_BULLET_DIRECTION = 1
+
+--ids
+
+PLAYER_ID = 0
+ENEMY_STARTING_ID = 1

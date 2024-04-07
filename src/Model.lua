@@ -31,6 +31,8 @@ Model.bulletParams = {
 Model.enemyParams = {
     assetName = "enemy",
     speed = 200,
+    rateOfFire = 0.5,
+    bulletPoolSize = 5
 }
 
 Model.init = function()
