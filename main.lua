@@ -19,11 +19,13 @@ function love.load()
     AssetsManager.init()
     Model.init()
     eventManager = EventManager.new()
-    stars = StarsCls.new( Model.starsParams)
-    ship = ShipCls.new( Model.shipParams )
+    stars = StarsCls.new(Model.starsParams)
+    ship = ShipCls.new(Model.shipParams)
+    enemy = Enemy.new(Model.enemyParams)
     
     instantiateObjectInScene(stars)
     instantiateObjectInScene(ship)
+    instantiateObjectInScene(enemy)
     
 end
 
