@@ -14,6 +14,8 @@ function Bullet:init(params)
   self.direction = params.direction
   
   self.parentId = params.parentId
+  
+  self.bulletDestroyedEvent = Event.new({sender = self, type = ON_BULLET_DESTROYED})
 end
 
 function Bullet:update(dt)
@@ -24,7 +26,7 @@ function Bullet:update(dt)
   --destroying the bullet if it's off screen
   if not self:isOnScreen() then
     removeObjectFromScene(self)
-    EventManager:notify(ON_BULLET_DESTROYED..tostring(self.parentId), self)
+    EventManager:notify(self.bulletDestroyedEvent, self)
   end
 end
 

@@ -22,14 +22,30 @@ function Enemy:init(params)
   
   self.bulletPool = Pool.new({poolSize = params.bulletPoolSize})
   self:populateBulletPool()
-  EventManager:subscribe(ON_BULLET_DESTROYED..tostring(self.id), self)
   
+  --[[self.components = {}
+  
+  if params.components then
+    for i = 1, #params.components do
+      self:addComponent(params.components[i])
+    end
+  end
+  ]]
 end
 
 function Enemy:update(dt)
   
   self:handleMovement(dt)
   self:handleShooting(dt)
+  
+  --[[
+  for i = 1, #self.components do
+    component = self.components[i]
+    if component and component.update  then
+      component:update(dt)
+    end
+  end
+  ]]
 end
 
 function Enemy:draw()
@@ -77,6 +93,7 @@ function Enemy:populateBulletPool()
     Model.bulletParams.parentId = self.id
     local bullet = Bullet.new(Model.bulletParams)
     self.bulletPool:addObject(bullet)
+    EventManager:subscribe(bullet.bulletDestroyedEvent, self)
   end
 end
 
@@ -84,8 +101,14 @@ function Enemy:onNotify(event, args)
   
   args = args or {}
   
-  if event == ON_BULLET_DESTROYED..tostring(self.id) then
+  if event and event.type == ON_BULLET_DESTROYED then
     self.bulletPool:returnObject(args)
+  end
+end
+
+function Enemy:addComponent(component)
+  if component then
+    table.insert(self.components, component)
   end
 end
 

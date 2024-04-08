@@ -12,6 +12,8 @@ require 'src/Dependencies'
 local ship = nil
 local stars = nil
 
+onSpacebarPressed = nil --global event
+
 local scene = {}
 
 function love.load()
@@ -19,6 +21,9 @@ function love.load()
     AssetsManager.init()
     Model.init()
     eventManager = EventManager.new()
+    
+    onSpacebarPressed = Event.new({type = ON_SPACEBAR_PRESSED})
+    
     stars = StarsCls.new(Model.starsParams)
     ship = ShipCls.new(Model.shipParams)
     enemy = Enemy.new(Model.enemyParams)
@@ -89,7 +94,7 @@ function love.keypressed(key)
     end
     
     if key == SPACEBAR_KEY then
-        EventManager:notify(ON_SPACEBAR_PRESSED)
+        EventManager:notify(onSpacebarPressed)
     end
     
 

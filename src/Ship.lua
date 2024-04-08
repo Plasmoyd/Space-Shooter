@@ -15,8 +15,7 @@ function Ship:init(params)
     self.bulletPool = Pool.new({ poolSize = params.bulletPoolSize})
     self:populateBulletPool()
     
-    EventManager:subscribe(ON_SPACEBAR_PRESSED, self)
-    EventManager:subscribe(ON_BULLET_DESTROYED..tostring(self.id), self)
+    EventManager:subscribe(onSpacebarPressed, self)
 end
 
 function Ship:update(dt)
@@ -70,9 +69,13 @@ function Ship:onNotify(event, args)
   
     args = args or {}
     
-    if event == ON_SPACEBAR_PRESSED then
+    if not event then
+      return
+    end
+    
+    if event.type == ON_SPACEBAR_PRESSED then
         self:shoot()
-    elseif event == ON_BULLET_DESTROYED..tostring(self.id) then
+    elseif event.type == ON_BULLET_DESTROYED then
         self.bulletPool:returnObject(args)
     end
       
@@ -108,6 +111,7 @@ function Ship:populateBulletPool()
       Model.bulletParams.direction = PLAYER_BULLET_DIRECTION
       local bullet = Bullet.new(Model.bulletParams)
       self.bulletPool:addObject(bullet)
+      EventManager:subscribe(bullet.bulletDestroyedEvent, self)
     end
 end
 
