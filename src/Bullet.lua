@@ -25,8 +25,7 @@ function Bullet:update(dt)
   
   --destroying the bullet if it's off screen
   if not self:isOnScreen() then
-    removeObjectFromScene(self)
-    EventManager:notify(self.bulletDestroyedEvent, self)
+    self:destroy()
   end
 end
 
@@ -48,7 +47,8 @@ function Bullet:isOnScreen()
 end
 
 function Bullet:destroy()
-  self = nil
+  removeObjectFromScene(self)
+  EventManager:notify(self.bulletDestroyedEvent, self)
 end
 
 function Bullet:updatePosition(x, y)
@@ -60,7 +60,7 @@ function Bullet:updatePosition(x, y)
 end
 
 function Bullet:handleCollision(args)
-  print("Bullet Collision")
+  self:destroy()
 end
 
 return Bullet

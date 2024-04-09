@@ -72,7 +72,7 @@ function Enemy:handleShooting(dt)
   end
   
   local xOffset = self.width / 2
-  local yOffset = (self.height / 2)
+  local yOffset = (self.height)
   local x = self.x + xOffset
   local y = self.y + yOffset
   bullet:updatePosition(x, y)

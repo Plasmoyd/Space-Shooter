@@ -7,10 +7,14 @@ end
 
 function CollisionManager:checkCollisions(objects)
 
-  for i = 1, #objects  do
+  for i = 1, #objects - 1 do
     for j = i + 1, #objects do
       local obj1 = objects[i]
-      local obj2 = objects[i + 1]
+      local obj2 = objects[j]
+      
+      if not obj1 or not obj2 then
+        return
+      end
       
       if self:shouldCheckCollision(obj1, obj2) then
         if self:checkAABBCollision(obj1, obj2) then

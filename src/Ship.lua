@@ -119,7 +119,7 @@ function Ship:populateBulletPool()
 end
 
 function Ship:handleCollision(args)
-  print("Ship Collision!")
+  --print("Ship Collision!")
 end
 
 return Ship
