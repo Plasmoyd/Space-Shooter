@@ -20,7 +20,8 @@ ON_ENEMY_BULLET_DESTROYED = "enemyBulletDestroyed"
 PLAYER_BULLET_DIRECTION = -1
 ENEMY_BULLET_DIRECTION = 1
 
---ids
+-- collision constants
 
-PLAYER_ID = 0
-ENEMY_STARTING_ID = 1
+ENEMY_COLLISION_TYPE = "enemyCollisionType"
+SHIP_COLLISION_TYPE = "shipCollisionType"
+BULLET_COLLISION_TYPE = "bulletCollisionType"

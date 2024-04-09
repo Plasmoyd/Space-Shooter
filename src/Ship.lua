@@ -7,10 +7,13 @@ function Ship:init(params)
     self.asset = params.asset
     self.x = Model.stage.stageWidth / 2
     self.y = Model.stage.stageHeight / 2
-    self.w = self.asset:getWidth()
-    self.h = self.asset:getHeight()
+    self.width = self.asset:getWidth()
+    self.height = self.asset:getHeight()
+    
     self.rateOfFire = params.rateOfFire
     self.fireTimer = params.rateOfFire
+    
+    self.collisionChannel = SHIP_COLLISION_TYPE
     
     self.bulletPool = Pool.new({ poolSize = params.bulletPoolSize})
     self:populateBulletPool()
@@ -55,13 +58,13 @@ function Ship:handleMovement(dt)
     movementVector = normalizeVector({x = xDirection, y = yDirection})
 
     --ship can now move only within the borders of the screen
-    self.x = clamp(self.x + (movementVector.x * self.speed * dt), self.w / 2, Model.stage.stageWidth - self.w / 2)
-    self.y = clamp(self.y + (movementVector.y * self.speed * dt), self.h / 2, Model.stage.stageHeight - self.h / 2)
+    self.x = clamp(self.x + (movementVector.x * self.speed * dt), self.width / 2, Model.stage.stageWidth - self.width / 2)
+    self.y = clamp(self.y + (movementVector.y * self.speed * dt), self.height / 2, Model.stage.stageHeight - self.height / 2)
 end
 
 function Ship:draw()
-    local newX = self.x - (self.w/2)
-    local newY = self.y - (self.h/2)
+    local newX = self.x - (self.width/2)
+    local newY = self.y - (self.height/2)
     love.graphics.draw(self.asset, newX,newY )
 end
 
@@ -93,7 +96,7 @@ function Ship:shoot()
       return
     end
     
-    local yOffset = (self.h / 2)
+    local yOffset = (self.height / 2)
     local x = self.x
     local y = self.y - yOffset
     bullet:updatePosition(x, y)
@@ -113,6 +116,10 @@ function Ship:populateBulletPool()
       self.bulletPool:addObject(bullet)
       EventManager:subscribe(bullet.bulletDestroyedEvent, self)
     end
+end
+
+function Ship:handleCollision(args)
+  print("Ship Collision!")
 end
 
 return Ship

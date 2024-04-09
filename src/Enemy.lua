@@ -1,11 +1,6 @@
 local Enemy = classes.class()
 
-local nextId = ENEMY_STARTING_ID
-
 function Enemy:init(params)
-  
-  self.id = nextId
-  nextId = nextId + 1
   
   params.x = params.x or Model.stage.stageWidth / 2
   params.y = params.y or 0
@@ -19,6 +14,8 @@ function Enemy:init(params)
   
   self.rateOfFire = params.rateOfFire
   self.fireTimer = 0
+  
+  self.collisionChannel = ENEMY_COLLISION_TYPE
   
   self.bulletPool = Pool.new({poolSize = params.bulletPoolSize})
   self:populateBulletPool()
@@ -110,6 +107,10 @@ function Enemy:addComponent(component)
   if component then
     table.insert(self.components, component)
   end
+end
+
+function Enemy:handleCollision(args)
+  print("Enemy Collision!")
 end
 
 return Enemy

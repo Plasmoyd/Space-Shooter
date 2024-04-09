@@ -2,8 +2,6 @@ local Bullet = classes.class()
 
 function Bullet:init(params)
   
-  params.parentId = params.parentId or PLAYER_ID
-  
   --print("xPosition: " .. xPosition .. " yPosition: " .. yPosition)
   self.speed = params.speed
   self.asset = params.asset
@@ -14,6 +12,8 @@ function Bullet:init(params)
   self.direction = params.direction
   
   self.parentId = params.parentId
+  
+  self.collisionChannel = BULLET_COLLISION_TYPE
   
   self.bulletDestroyedEvent = Event.new({sender = self, type = ON_BULLET_DESTROYED})
 end
@@ -57,6 +57,10 @@ function Bullet:updatePosition(x, y)
      self.x = x
      self.y = y
    end
+end
+
+function Bullet:handleCollision(args)
+  print("Bullet Collision")
 end
 
 return Bullet

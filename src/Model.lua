@@ -12,7 +12,8 @@ Model.shipParams = {
     assetName = "ship",
     speed = 500,
     rateOfFire = 0.15,
-    bulletPoolSize = 20
+    bulletPoolSize = 20,
+    collisionChannel = SHIP_COLLISION_TYPE
 }
 
 Model.starsParams = {
@@ -25,14 +26,16 @@ Model.bulletParams = {
     assetName = "bullet",
     speed = 1000,
     x = 0,
-    y = 0
+    y = 0,
+    collisionChannel = BULLET_COLLISION_TYPE
 }
 
 Model.enemyParams = {
     assetName = "enemy",
     speed = 200,
     rateOfFire = 0.5,
-    bulletPoolSize = 5
+    bulletPoolSize = 5,
+    collisionChannel = ENEMY_COLLISION_TYPE
 }
 
 Model.init = function()
@@ -41,6 +44,25 @@ Model.init = function()
         stageWidth = love.graphics.getWidth()
     }
     
+    Model.collisionHandlers = {
+  
+      [ENEMY_COLLISION_TYPE] = {
+          
+        BULLET_COLLISION_TYPE,
+        SHIP_COLLISION_TYPE
+      },
+      
+      [SHIP_COLLISION_TYPE] = {
+        BULLET_COLLISION_TYPE,  
+        ENEMY_COLLISION_TYPE
+      },
+      
+      [BULLET_COLLISION_TYPE] = {
+        SHIP_COLLISION_TYPE,
+        ENEMY_COLLISION_TYPE
+      }
+    
+    }
     
     --init assets dynamically
     Model.shipParams.asset = AssetsManager.sprites[Model.shipParams.assetName]

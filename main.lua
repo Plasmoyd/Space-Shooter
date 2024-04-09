@@ -24,27 +24,35 @@ function love.load()
     
     onSpacebarPressed = Event.new({type = ON_SPACEBAR_PRESSED})
     
+    collisionManager = CollisionManager.new(Model.collisionHandlers)
     stars = StarsCls.new(Model.starsParams)
     ship = ShipCls.new(Model.shipParams)
     enemy = Enemy.new(Model.enemyParams)
     
-    instantiateObjectInScene(stars)
+    --instantiateObjectInScene(stars)
     instantiateObjectInScene(ship)
     instantiateObjectInScene(enemy)
     
 end
 
 function love.update(dt)
+  
+  stars:update(dt)
+  
    -- print("update")
     for i = 1, #scene do
       if scene[i] and scene[i].update then
         scene[i]:update(dt)
       end
     end
+    
+    collisionManager:checkCollisions(scene)
 end
 
 
 function love.draw()
+  
+    stars:draw()
     --love.graphics.draw(AssetsManager.sprites.fireAngles, 0,0 )
     for i = 1, #scene do
       if scene[i].draw then
