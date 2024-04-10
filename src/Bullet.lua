@@ -10,6 +10,7 @@ function Bullet:init(params)
   self.width = self.asset:getWidth()
   self.height = self.asset:getHeight()
   self.direction = params.direction
+  self.damage = params.damage
   
   self.parentId = params.parentId
   

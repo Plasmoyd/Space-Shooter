@@ -27,6 +27,7 @@ Model.bulletParams = {
     speed = 1000,
     x = 0,
     y = 0,
+    damage = 1,
     collisionChannel = BULLET_COLLISION_TYPE
 }
 
@@ -35,7 +36,11 @@ Model.enemyParams = {
     speed = 200,
     rateOfFire = 0.5,
     bulletPoolSize = 5,
-    collisionChannel = ENEMY_COLLISION_TYPE
+    collisionChannel = ENEMY_COLLISION_TYPE,
+    components = {
+        
+        { class = HEALTH_COMPONENT, params = { maxHealth = 3}}
+      }
 }
 
 Model.init = function()
@@ -44,6 +49,7 @@ Model.init = function()
         stageWidth = love.graphics.getWidth()
     }
     
+    --this part of the model tells the CollisionManager which types of objects can collide with each other
     Model.collisionHandlers = {
   
       [ENEMY_COLLISION_TYPE] = {
@@ -70,6 +76,19 @@ Model.init = function()
     Model.enemyParams.asset = AssetsManager.sprites[Model.enemyParams.assetName]
     
     --define enemies here
+    
+    Model.enemyType = {
+      
+      [BASE_ENEMY] = {
+        
+        components = {
+        
+          { class = HEALTH_COMPONENT, params = { maxHealth = 3}}
+        }
+      }
+      
+    }
+    
 
 end
 

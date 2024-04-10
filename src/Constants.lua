@@ -14,6 +14,7 @@ SPACEBAR_KEY = "space"
 ON_SPACEBAR_PRESSED = "spacebarPressed"
 ON_BULLET_DESTROYED = "bulletDestroyed"
 ON_ENEMY_BULLET_DESTROYED = "enemyBulletDestroyed"
+ON_HEALTH_ZERO = "healthZero"
 
 --bullet direction constants
 
@@ -25,3 +26,11 @@ ENEMY_BULLET_DIRECTION = 1
 ENEMY_COLLISION_TYPE = "enemyCollisionType"
 SHIP_COLLISION_TYPE = "shipCollisionType"
 BULLET_COLLISION_TYPE = "bulletCollisionType"
+
+--component class names
+
+HEALTH_COMPONENT = "healthComponent"
+
+--enemy types
+
+BASE_ENEMY = "baseEnemy"

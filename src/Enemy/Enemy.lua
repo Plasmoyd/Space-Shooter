@@ -20,14 +20,13 @@ function Enemy:init(params)
   self.bulletPool = Pool.new({poolSize = params.bulletPoolSize})
   self:populateBulletPool()
   
-  --[[self.components = {}
+  self.components = params.components or {}
   
-  if params.components then
-    for i = 1, #params.components do
-      self:addComponent(params.components[i])
-    end
+  if self.components[HEALTH_COMPONENT] then
+    
+    EventManager:subscribe(self.components[HEALTH_COMPONENT].onHealthZero, self)
   end
-  ]]
+  
 end
 
 function Enemy:update(dt)
@@ -35,14 +34,12 @@ function Enemy:update(dt)
   self:handleMovement(dt)
   self:handleShooting(dt)
   
-  --[[
-  for i = 1, #self.components do
-    component = self.components[i]
-    if component and component.update  then
+  for _, component in pairs(self.components) do
+    if component.update then
       component:update(dt)
     end
   end
-  ]]
+  
 end
 
 function Enemy:draw()
@@ -98,8 +95,17 @@ function Enemy:onNotify(event, args)
   
   args = args or {}
   
-  if event and event.type == ON_BULLET_DESTROYED then
+  if not event then
+    return
+  end
+  
+  if event.type == ON_BULLET_DESTROYED then
+    
     self.bulletPool:returnObject(args)
+    
+  elseif event.type == ON_HEALTH_ZERO then
+    self:destroy()
+    
   end
 end
 
@@ -110,7 +116,31 @@ function Enemy:addComponent(component)
 end
 
 function Enemy:handleCollision(args)
-  print("Enemy Collision!")
+  
+  
+  local collisionObject = args.collidedWith
+  
+  if not collisionObject then
+    return
+  end
+  
+  local healthComponent = self.components[HEALTH_COMPONENT]
+  
+  if healthComponent then
+    if collisionObject.collisionChannel == BULLET_COLLISION_TYPE then
+    
+      healthComponent:takeDamage(collisionObject.damage)
+    elseif collisionObject.collisionChannel == SHIP_COLLISION_TYPE then
+      
+      healthComponent:takeDamage(healthComponent.maxHealth)
+    end
+  end
+end
+
+function Enemy:destroy()
+  print("came into destroy function")
+  removeObjectFromScene(self)
+  self = nil
 end
 
 return Enemy
