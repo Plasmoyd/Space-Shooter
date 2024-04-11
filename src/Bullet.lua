@@ -14,7 +14,7 @@ function Bullet:init(params)
   
   self.parentId = params.parentId
   
-  self.collisionChannel = BULLET_COLLISION_TYPE
+  self.collisionChannel = params.collisionChannel
   
   self.bulletDestroyedEvent = Event.new({sender = self, type = ON_BULLET_DESTROYED})
 end

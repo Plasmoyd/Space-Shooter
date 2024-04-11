@@ -13,18 +13,46 @@ function Ship:init(params)
     self.rateOfFire = params.rateOfFire
     self.fireTimer = params.rateOfFire
     
-    self.collisionChannel = SHIP_COLLISION_TYPE
+    self.collisionChannel = params.collisionChannel
     
     self.bulletPool = Pool.new({ poolSize = params.bulletPoolSize})
     self:populateBulletPool()
     
+    self.components = {}
+    self:populateComponents(params.components)
+    
+    if self.components[HEALTH_COMPONENT] then
+      EventManager:subscribe(self.components[HEALTH_COMPONENT].onHealthZero, self)
+    end
+    
     EventManager:subscribe(onSpacebarPressed, self)
 end
+
+function Ship:populateComponents(componentsInfo)
+    
+    for i = 1, #componentsInfo do
+      
+      local componentType = componentsInfo[i].class
+      local componentParams = componentsInfo[i].params
+    
+      local component = ComponentFactory.createComponent(componentType, componentParams)
+      if component then
+        self.components[componentType] = component
+      end
+    end
+end
+
 
 function Ship:update(dt)
 
     self:handleMovement(dt)
     self:handleTimer(dt)
+    
+    for _, component in pairs(self.components) do
+      if component.update then
+        component:update(dt)
+      end
+    end
     
 end
 
@@ -80,6 +108,8 @@ function Ship:onNotify(event, args)
         self:shoot()
     elseif event.type == ON_BULLET_DESTROYED then
         self.bulletPool:returnObject(args)
+    elseif event.type == ON_HEALTH_ZERO then
+      self:destroy()
     end
       
 end
@@ -119,7 +149,30 @@ function Ship:populateBulletPool()
 end
 
 function Ship:handleCollision(args)
-  --print("Ship Collision!")
+  
+    local collisionObject = args.collidedWith
+    
+    if not collisionObject then
+      return
+    end
+    
+    local healthComponent = self.components[HEALTH_COMPONENT]
+    
+    if healthComponent then
+      if collisionObject.collisionChannel == BULLET_COLLISION_TYPE then
+      
+        healthComponent:takeDamage(collisionObject.damage)
+      elseif collisionObject.collisionChannel == ENEMY_COLLISION_TYPE then
+        
+        healthComponent:takeDamage(healthComponent.maxHealth)
+      end
+    end
+end
+
+function Ship:destroy()
+  
+  removeObjectFromScene(self)
+  self = nil
 end
 
 return Ship

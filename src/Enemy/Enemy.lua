@@ -15,7 +15,7 @@ function Enemy:init(params)
   self.rateOfFire = params.rateOfFire
   self.fireTimer = 0
   
-  self.collisionChannel = ENEMY_COLLISION_TYPE
+  self.collisionChannel = params.collisionChannel
   
   self.bulletPool = Pool.new({poolSize = params.bulletPoolSize})
   self:populateBulletPool()
@@ -138,7 +138,6 @@ function Enemy:handleCollision(args)
 end
 
 function Enemy:destroy()
-  print("came into destroy function")
   removeObjectFromScene(self)
   self = nil
 end
