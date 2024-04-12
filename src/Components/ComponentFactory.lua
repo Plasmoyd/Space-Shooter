@@ -1,4 +1,4 @@
-ComponentFactory = classes.class()
+local ComponentFactory = classes.class()
 
 function ComponentFactory.createComponent(componentType, params)
 

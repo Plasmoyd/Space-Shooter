@@ -6,6 +6,8 @@ function Enemy:init(params)
   params.y = params.y or 0
   
   self.asset = params.asset
+  self.explosionAsset = params.explosionAsset
+  self.explosionDuration = params.explosionDuration
   self.speed = params.speed
   self.width = self.asset:getWidth()
   self.height = self.asset:getHeight()
@@ -134,6 +136,8 @@ function Enemy:handleCollision(args)
       
       healthComponent:takeDamage(healthComponent.maxHealth)
     end
+    
+    ParticleSystem.playParticle(self.explosionAsset, self.explosionDuration, self.x, self.y)
   end
 end
 

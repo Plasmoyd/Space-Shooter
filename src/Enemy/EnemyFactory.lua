@@ -1,4 +1,4 @@
-EnemyFactory = classes.class()
+local EnemyFactory = classes.class()
 
 function EnemyFactory:init(params)
   

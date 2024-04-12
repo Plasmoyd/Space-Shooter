@@ -5,8 +5,10 @@ function Ship:init(params)
     self.id = PLAYER_ID
     self.speed = params.speed
     self.asset = params.asset
+    self.explosionAsset = params.explosionAsset
+    self.explosionDuration = params.explosionDuration
     self.x = Model.stage.stageWidth / 2
-    self.y = Model.stage.stageHeight / 2
+    self.y = Model.stage.stageHeight
     self.width = self.asset:getWidth()
     self.height = self.asset:getHeight()
     
@@ -166,6 +168,8 @@ function Ship:handleCollision(args)
         
         healthComponent:takeDamage(healthComponent.maxHealth)
       end
+      
+      ParticleSystem.playParticle(self.explosionAsset, self.explosionDuration, self.x, self.y)
     end
 end
 

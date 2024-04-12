@@ -10,9 +10,11 @@ local Model = {
 
 Model.shipParams = {
     assetName = "ship",
+    explosionAssetName = "explosion",
     speed = 500,
     rateOfFire = 0.15,
-    bulletPoolSize = 20
+    bulletPoolSize = 20,
+    explosionDuration = 0.2
 }
 
 Model.starsParams = {
@@ -31,9 +33,11 @@ Model.bulletParams = {
 
 Model.enemyParams = {
     assetName = "enemy",
+    explosionAssetName = "explosion",
     speed = 200,
-    rateOfFire = 0.5,
-    bulletPoolSize = 5
+    rateOfFire = 2,
+    bulletPoolSize = 5,
+    explosionDuration = 0.3
 }
 
 Model.init = function()
@@ -68,6 +72,8 @@ Model.init = function()
     Model.bulletParams.asset = AssetsManager.sprites[Model.bulletParams.assetName]
     Model.enemyParams.asset = AssetsManager.sprites[Model.enemyParams.assetName]
     
+    Model.shipParams.explosionAsset = AssetsManager.sprites[Model.shipParams.explosionAssetName]
+    Model.enemyParams.explosionAsset = AssetsManager.sprites[Model.enemyParams.explosionAssetName]
     --init collision channels
     
     Model.shipParams.collisionChannel = SHIP_COLLISION_TYPE
@@ -99,6 +105,28 @@ Model.init = function()
     }
     
     Model.shipParams.components = Model.shipComponents.components
+    
+    --define levels here
+    
+    Model.levels = {
+      
+      { 
+        name = "Level 1" ,
+        enemies = {
+          {type = BASE_ENEMY, count = 10}
+        },
+        
+        duration = 90
+      },
+      {
+        enemies = 
+        {
+          {type = BASE_ENEMY, count = 10}
+        },
+        
+        duration = 120
+      }
+    }
     
 
 end

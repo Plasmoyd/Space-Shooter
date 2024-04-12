@@ -1,4 +1,4 @@
-CollisionManager = classes.class()
+local CollisionManager = classes.class()
 
 function CollisionManager:init(params)
 
@@ -42,6 +42,10 @@ function CollisionManager:shouldCheckCollision(obj1, obj2)
   
   local collisionHandler1 = self.collisionHandlers[obj1.collisionChannel]
   local collisionHandler2 = self.collisionHandlers[obj2.collisionChannel]
+  
+  if not collisionHandler1 or not collisionHandler2 then
+    return false
+  end
   
   for _,collisionChannel in pairs(collisionHandler1) do
     if collisionChannel == obj2.collisionChannel then
