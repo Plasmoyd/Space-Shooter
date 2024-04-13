@@ -12,6 +12,8 @@ function EnemySpawner:init(params)
   
   self.pool = Pool.new({poolSize = (self.maxEnemies / 2)})
   self:populatePool()
+  
+  self.spawnerCompleteEvent = Event.new({sender = self, type = ON_SPAWNER_COMPLETE})
 end
 
 function EnemySpawner:update(dt)
@@ -32,7 +34,7 @@ function EnemySpawner:populatePool()
   for i = 1, self.pool:getPoolSize() do
     local enemy = EnemyFactory.createEnemy(self.enemyType)
     self.pool:addObject(enemy)
-    EventManager.subscribe(enemy.enemyDestroyedEvent, self)
+    EventManager:subscribe(enemy.enemyDestroyedEvent, self)
   end
 end
 
@@ -47,11 +49,13 @@ function EnemySpawner:onNotify(event, args)
   if event.type == ON_ENEMY_DESTROYED then
     
     self.pool:returnObject(args)
+    args:resetValues()
     self.enemiesKilled = self.enemiesKilled + 1
     
     if self.enemiesKilled == self.maxEnemies then
       
-      shouldSpawn = false
+      self.shouldSpawn = false
+      EventManager:notify(self.spawnerCompleteEvent, self)
     end
   end
   

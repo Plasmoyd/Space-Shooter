@@ -1,5 +1,7 @@
 local Level = classes.class()
 
+Level.levelCompleteEvent = Event.new({type = ON_LEVEL_COMPLETE})
+
 function Level:init(params)
   
   self.name = params.name
@@ -7,12 +9,15 @@ function Level:init(params)
   
   self.scene = nil
   
+  self.spawnersComplete = 0
   self.spawners = {}
   for i = 1, #params.enemies do
     
     local spawner = EnemySpawner.new({type = params.enemies[i].type, count = params.enemies[i].count, spawnRate = params.enemies[i].spawnRate})
     table.insert(self.spawners, spawner)
+    EventManager:subscribe(spawner.spawnerCompleteEvent, self)
   end
+  
 end
 
 function Level:enter()
@@ -46,6 +51,10 @@ function Level:draw()
       self.scene[i]:draw()
     end
   end
+  
+  love.graphics.setFont(AssetsManager.fonts.spaceFont)
+  
+  love.graphics.print(self.name, (Model.stage.stageWidth / 2) - 40, 10)
 end
 
 function Level:exit()
@@ -74,6 +83,25 @@ function Level:removeObject(object)
     if self.scene[i] == object then
       table.remove(self.scene, i)
       return
+    end
+  end
+end
+
+function Level:onNotify(event, args)
+  
+  args = args or {}
+  
+  if not event then 
+    return
+  end
+  
+  if event.type == ON_SPAWNER_COMPLETE then
+    
+    self.spawnersComplete = self.spawnersComplete + 1
+    
+    if self.spawnersComplete == #self.spawners then
+      
+      EventManager:notify(Level.levelCompleteEvent)
     end
   end
 end

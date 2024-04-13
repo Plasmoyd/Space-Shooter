@@ -16,6 +16,9 @@ function LevelManager:init(params)
   self:addObjectToCurrentLevel(ship)
   
   collisionManager = CollisionManager.new(Model.collisionHandlers)
+  
+  print("Subscribing to level complete event")
+  EventManager:subscribe(Level.levelCompleteEvent, self)
 end
 
 function LevelManager:update(dt)
@@ -28,7 +31,7 @@ end
 
 function LevelManager:draw()
   
-  if self.currentLevel then
+  if self.currentLevel and self.currentLevel.draw then
     self.currentLevel:draw()
   end
 end
@@ -61,6 +64,24 @@ end
 
 function LevelManager:removeObjectFromCurrentLevel(object)
   self.currentLevel:removeObject(object)
+end
+
+function LevelManager:onNotify(event, args)
+  
+  args = args or {}
+  
+  if not event then
+    return
+  end
+  
+  print("Event received in LevelManager:", event.type)
+  
+  if event.type == ON_LEVEL_COMPLETE then
+    print("Level complete event detected, changing level.")
+    self:changeLevel()
+  else
+    print("Received different event type: ", event.type)
+  end
 end
 
 return LevelManager

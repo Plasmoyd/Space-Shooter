@@ -15,7 +15,12 @@ AssetsManager.init = function()
         fireAngles = love.graphics.newImage("Assets/fireAngles.png"),
   }
   
+  local fonts = {
+      spaceFont = love.graphics.newFont("Assets/fonts/Spacetron Personal Used.otf", 20)
+  }
+  
   AssetsManager.sprites = sprites
+  AssetsManager.fonts = fonts
     
 end
 

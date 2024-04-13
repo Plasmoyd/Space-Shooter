@@ -131,6 +131,9 @@ function Enemy:handleCollision(args)
   local healthComponent = self.components[HEALTH_COMPONENT]
   
   if healthComponent then
+    
+    ParticleSystem.playParticle(self.explosionAsset, self.explosionDuration, self.x, self.y)
+    
     if collisionObject.collisionChannel == BULLET_COLLISION_TYPE then
     
       healthComponent:takeDamage(collisionObject.damage)
@@ -138,14 +141,24 @@ function Enemy:handleCollision(args)
       
       healthComponent:takeDamage(healthComponent.maxHealth)
     end
-    
-    ParticleSystem.playParticle(self.explosionAsset, self.explosionDuration, self.x, self.y)
   end
 end
 
 function Enemy:destroy()
   removeObjectFromScene(self)
   EventManager:notify(self.enemyDestroyedEvent, self)
+end
+
+function Enemy:resetValues()
+  
+  local healthComponent = self.components[HEALTH_COMPONENT]
+  if healthComponent then 
+    healthComponent:heal(healthComponent.maxHealth)
+  end
+  
+  self.y = 0
+  self.x = Model.stage.stageWidth / 2
+  
 end
 
 return Enemy
