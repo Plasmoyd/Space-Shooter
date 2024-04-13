@@ -24,64 +24,32 @@ function love.load()
     
     onSpacebarPressed = Event.new({type = ON_SPACEBAR_PRESSED})
     
-    collisionManager = CollisionManager.new(Model.collisionHandlers)
     stars = StarsCls.new(Model.starsParams)
-    ship = ShipCls.new(Model.shipParams)
-    --enemy = Enemy.new(Model.enemyParams)
-    enemy = EnemyFactory.createEnemy(BASE_ENEMY)
-    
-    --instantiateObjectInScene(stars)
-    instantiateObjectInScene(ship)
-    instantiateObjectInScene(enemy)
+    levelManager = LevelManager.new(Model.levels)
     
 end
 
 function love.update(dt)
   
   stars:update(dt)
-  
-   -- print("update")
-    for i = 1, #scene do
-      if scene[i] and scene[i].update then
-        scene[i]:update(dt)
-      end
-    end
-    
-    collisionManager:checkCollisions(scene)
+  levelManager:update(dt)
 end
 
 
 function love.draw()
   
     stars:draw()
-    --love.graphics.draw(AssetsManager.sprites.fireAngles, 0,0 )
-    for i = 1, #scene do
-      if scene[i].draw then
-        scene[i]:draw()
-      end
-    end
-    --love.graphics.print("You Win!", 180, 350)
+    levelManager:draw()
 end
 
 function instantiateObjectInScene(object)
-    
-    if scene then
-      table.insert(scene, object)
-    end
+  
+    levelManager:addObjectToCurrentLevel(object)
 end
 
 function removeObjectFromScene(object)
-  
-    if not scene then
-      return
-    end
     
-    for i = 1, #scene do
-      if scene[i] == object then
-        table.remove(scene, i)
-        return
-      end
-    end
+    levelManager:removeObjectFromCurrentLevel(object)
 end
 
 function love.keypressed(key)
