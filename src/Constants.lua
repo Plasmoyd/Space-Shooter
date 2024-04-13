@@ -13,6 +13,7 @@ SPACEBAR_KEY = "space"
 --event constants
 ON_SPACEBAR_PRESSED = "spacebarPressed"
 ON_BULLET_DESTROYED = "bulletDestroyed"
+ON_ENEMY_DESTROYED = "enemyDestroyed"
 ON_ENEMY_BULLET_DESTROYED = "enemyBulletDestroyed"
 ON_HEALTH_ZERO = "healthZero"
 

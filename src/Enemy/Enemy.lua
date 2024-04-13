@@ -24,6 +24,8 @@ function Enemy:init(params)
   
   self.components = params.components or {}
   
+  self.enemyDestroyedEvent = Event.new({sender = self, type = ON_ENEMY_DESTROYED})
+  
   if self.components[HEALTH_COMPONENT] then
     
     EventManager:subscribe(self.components[HEALTH_COMPONENT].onHealthZero, self)
@@ -143,7 +145,7 @@ end
 
 function Enemy:destroy()
   removeObjectFromScene(self)
-  self = nil
+  EventManager:notify(self.enemyDestroyedEvent, self)
 end
 
 return Enemy
