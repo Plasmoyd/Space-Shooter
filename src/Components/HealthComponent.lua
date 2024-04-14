@@ -1,4 +1,4 @@
-local HealthComponent = classes.class()
+local HealthComponent = classes.class(Component)
 
 function HealthComponent:init(params)
   self.maxHealth = params.maxHealth

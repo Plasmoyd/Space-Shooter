@@ -8,7 +8,7 @@ function Enemy:init(params)
   self.asset = params.asset
   self.explosionAsset = params.explosionAsset
   self.explosionDuration = params.explosionDuration
-  self.speed = params.speed
+  --self.speed = params.speed
   self.width = self.asset:getWidth()
   self.height = self.asset:getHeight()
   self.x = params.x
@@ -24,12 +24,20 @@ function Enemy:init(params)
   
   self.components = params.components or {}
   
-  self.enemyDestroyedEvent = Event.new({sender = self, type = ON_ENEMY_DESTROYED})
+  --finding a reference to movement component
+  for _, component in pairs(self.components) do
+    if component.handleMovement then
+      self.movementComponent = component
+      break
+    end
+  end
   
   if self.components[HEALTH_COMPONENT] then
     
     EventManager:subscribe(self.components[HEALTH_COMPONENT].onHealthZero, self)
   end
+  
+  self.enemyDestroyedEvent = Event.new({sender = self, type = ON_ENEMY_DESTROYED})
   
 end
 
@@ -55,7 +63,25 @@ end
 
 function Enemy:handleMovement(dt)
   
-  self.y = (self.y + self.speed * dt) % Model.stage.stageHeight
+  --self.y = (self.y + self.speed * dt) % Model.stage.stageHeight
+  if not self.movementComponent then
+    return
+  end
+  
+  local positionVector = self.movementComponent:handleMovement(self.x, self.y, dt)
+  
+  self.x = positionVector.xPosition
+  self.y = positionVector.yPosition
+  
+  if not self:isOnScreen() then
+    self:destroy()
+  end
+  
+end
+
+function Enemy:isOnScreen()
+  
+  return self.y <= Model.stage.stageHeight
 end
 
 function Enemy:handleShooting(dt)

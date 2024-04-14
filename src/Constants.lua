@@ -35,7 +35,10 @@ BULLET_COLLISION_TYPE = "bulletCollisionType"
 --component class names
 
 HEALTH_COMPONENT = "healthComponent"
+BASE_MOVEMENT_COMPONENT = "baseMovementComponent"
+SINUSOIDAL_MOVEMENT_COMPONENT = "sinusoidalMovementComponent"
 
 --enemy types
 
 BASE_ENEMY = "baseEnemy"
+FUNKY_ENEMY = "funkyEnemy"

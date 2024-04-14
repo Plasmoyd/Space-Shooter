@@ -89,7 +89,17 @@ Model.init = function()
         
         components = {
         
-          { class = HEALTH_COMPONENT, params = { maxHealth = 3}}
+          { class = HEALTH_COMPONENT, params = { maxHealth = 3}},
+          { class = BASE_MOVEMENT_COMPONENT, params = {speed = 200}}
+        }
+      },
+      
+      [FUNKY_ENEMY] = {
+          
+        components = {
+          
+          {class = SINUSOIDAL_MOVEMENT_COMPONENT, params = { speed = 100}},
+          {class = HEALTH_COMPONENT, params = { maxHealth = 2}}
         }
       }
       
@@ -113,7 +123,8 @@ Model.init = function()
       { 
         name = "Level 1" ,
         enemies = {
-          {type = BASE_ENEMY, count = 2, spawnRate = 3}
+          {type = BASE_ENEMY, count = 5, spawnRate = 3},
+          {type = FUNKY_ENEMY, count = 3, spawnRate = 2}
         },
         
         duration = 90
