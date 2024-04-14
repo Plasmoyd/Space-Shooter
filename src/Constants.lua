@@ -18,6 +18,8 @@ ON_ENEMY_BULLET_DESTROYED = "enemyBulletDestroyed"
 ON_HEALTH_ZERO = "healthZero"
 ON_SPAWNER_COMPLETE = "spawnerComplete"
 ON_LEVEL_COMPLETE = "levelComplete"
+ON_GAME_OVER = "gameOver"
+ON_GAME_COMPLETE = "gameComplete"
 
 --bullet direction constants
 

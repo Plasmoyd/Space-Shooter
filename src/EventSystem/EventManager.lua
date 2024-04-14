@@ -35,6 +35,41 @@ function EventManager:subscribe(event, subscriber)
     table.insert(instance.subscribers[event], subscriber)
 end
 
+function EventManager:unsubscribe(event, subscriber)
+  
+  if not instance then
+      
+    instance = self:init()
+  end
+  
+  if not instance.subscribers[event] then
+    return
+  end
+  
+  local subscribers = instance.subscribers[event]
+  
+  for i = 1, #subscribers do
+    
+    if subscriber == subscribers[i] then
+      table.remove(subscribers, i)
+      break
+    end
+  end
+end
+
+function EventManager:unsubscribeAll(subscriber)
+  if not instance then
+    instance = self:init()
+  end
+    
+  for event, subscribers in pairs(instance.subscribers) do
+    for i = #subscribers, 1, -1 do
+      if subscribers[i] == subscriber then
+        table.remove(subscribers, i)
+      end
+    end
+  end
+end
 
 function EventManager:notify(event, args)
   

@@ -1,8 +1,5 @@
 local LevelManager = classes.class()
 
-local ship = nil
-local collisionManager = nil
-
 function LevelManager:init(params)
   
   
@@ -12,10 +9,10 @@ function LevelManager:init(params)
   self.currentIndex = 0
   self:changeLevel()
   
-  ship = ShipCls.new(Model.shipParams)
-  self:addObjectToCurrentLevel(ship)
+  self.ship = ShipCls.new(Model.shipParams)
+  self:addObjectToCurrentLevel(self.ship)
   
-  collisionManager = CollisionManager.new(Model.collisionHandlers)
+  self.collisionManager = CollisionManager.new(Model.collisionHandlers)
   
   print("Subscribing to level complete event")
   EventManager:subscribe(Level.levelCompleteEvent, self)
@@ -25,7 +22,7 @@ function LevelManager:update(dt)
   
   if self.currentLevel then
     self.currentLevel:update(dt)
-    collisionManager:checkCollisions(self.currentLevel.scene)
+    self.collisionManager:checkCollisions(self.currentLevel.scene)
   end
 end
 
@@ -39,7 +36,7 @@ end
 function LevelManager:changeLevel()
   
   if self.currentLevel then
-    self:removeObjectFromCurrentLevel(ship)
+    self:removeObjectFromCurrentLevel(self.ship)
     self.currentLevel:exit()
   end
   
@@ -48,13 +45,13 @@ function LevelManager:changeLevel()
   if self.currentIndex <= self.numberOfLevels then
     self.currentLevel = LevelLoader.loadLevel(self.currentIndex)
   else
-    print("Congratulations, you beat the game!")
+    EventManager:notify(gameCompleteEvent)
     return
   end
   
   if self.currentLevel then
     self.currentLevel:enter()
-    self:addObjectToCurrentLevel(ship)
+    self:addObjectToCurrentLevel(self.ship)
   end
 end
 
@@ -82,6 +79,13 @@ function LevelManager:onNotify(event, args)
   else
     print("Received different event type: ", event.type)
   end
+end
+
+function LevelManager:destroy()
+  EventManager:unsubscribeAll(self)
+  self.ship:destroy()
+  self.ship = nil
+  self = nil
 end
 
 return LevelManager

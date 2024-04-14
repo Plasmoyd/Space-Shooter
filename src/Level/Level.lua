@@ -63,7 +63,7 @@ function Level:exit()
     self.scene[i] = nil
   end
   
-  self.scene = nil
+  --self.scene = nil
 end
 
 function Level:addObject(object)

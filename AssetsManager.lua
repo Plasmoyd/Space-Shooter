@@ -16,7 +16,8 @@ AssetsManager.init = function()
   }
   
   local fonts = {
-      spaceFont = love.graphics.newFont("Assets/fonts/Spacetron Personal Used.otf", 20)
+      spaceFont = love.graphics.newFont("Assets/fonts/Spacetron Personal Used.otf", 20),
+      titleSpaceFont = love.graphics.newFont("Assets/fonts/Spacetron Personal Used.otf", 30)
   }
   
   AssetsManager.sprites = sprites

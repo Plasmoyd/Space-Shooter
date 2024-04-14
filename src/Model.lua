@@ -113,7 +113,7 @@ Model.init = function()
       { 
         name = "Level 1" ,
         enemies = {
-          {type = BASE_ENEMY, count = 2, spawnRate = 5}
+          {type = BASE_ENEMY, count = 2, spawnRate = 3}
         },
         
         duration = 90
@@ -122,7 +122,7 @@ Model.init = function()
         name = "Level 2",
         enemies = 
         {
-          {type = BASE_ENEMY, count = 10, spawnRate = 3}
+          {type = BASE_ENEMY, count = 2, spawnRate = 2}
         },
         
         duration = 120

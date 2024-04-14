@@ -11,10 +11,11 @@ require 'src/Dependencies'
 
 local ship = nil
 local stars = nil
+local gameLoopStateMachine = nil
 
 onSpacebarPressed = nil --global event
-
-local scene = {}
+gameOverEvent = nil
+gameCompleteEvent = nil
 
 function love.load()
     print("love.load")
@@ -23,25 +24,34 @@ function love.load()
     eventManager = EventManager.new()
     
     onSpacebarPressed = Event.new({type = ON_SPACEBAR_PRESSED})
+    gameOverEvent = Event.new({type = ON_GAME_OVER})
+    gameCompleteEvent = Event.new({type = ON_GAME_COMPLETE})
     
     stars = StarsCls.new(Model.starsParams)
-    levelManager = LevelManager.new(Model.levels)
+    --levelManager = LevelManager.new(Model.levels)
+    
+    gameLoopStateMachine = StateMachine.new()
+    
+    gameLoopStateMachine:changeState(MainMenuState.new({stateMachine = gameLoopStateMachine}))
     
 end
 
 function love.update(dt)
   
   stars:update(dt)
-  levelManager:update(dt)
+  --levelManager:update(dt)
+  gameLoopStateMachine:update(dt)
 end
 
 
 function love.draw()
   
     stars:draw()
-    levelManager:draw()
+    --levelManager:draw()
+    gameLoopStateMachine:draw()
 end
 
+--[[
 function instantiateObjectInScene(object)
   
     levelManager:addObjectToCurrentLevel(object)
@@ -51,6 +61,7 @@ function removeObjectFromScene(object)
     
     levelManager:removeObjectFromCurrentLevel(object)
 end
+]]
 
 function love.keypressed(key)
     print(key)

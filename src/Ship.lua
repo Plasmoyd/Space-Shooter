@@ -111,6 +111,7 @@ function Ship:onNotify(event, args)
     elseif event.type == ON_BULLET_DESTROYED then
         self.bulletPool:returnObject(args)
     elseif event.type == ON_HEALTH_ZERO then
+      EventManager:notify(gameOverEvent)
       self:destroy()
     end
       
@@ -176,6 +177,7 @@ end
 function Ship:destroy()
   
   removeObjectFromScene(self)
+  EventManager:unsubscribeAll(self)
   self = nil
 end
 
