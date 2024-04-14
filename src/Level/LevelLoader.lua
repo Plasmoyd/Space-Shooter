@@ -1,3 +1,4 @@
+--Factory class responsible for loading the level from the model and creating an instance of the level
 local LevelLoader = classes.class()
 
 function LevelLoader.loadLevel(index)

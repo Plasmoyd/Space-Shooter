@@ -1,15 +1,24 @@
+--Level class
 local Level = classes.class()
 
+--Event to notify when any level is complete
 Level.levelCompleteEvent = Event.new({type = ON_LEVEL_COMPLETE})
 
 function Level:init(params)
   
+  --load level attributes
   self.name = params.name
+  
+  --not used in current implementation, but can be easily supported
   self.duration = params.duration
   
+  --scene container where all game objects for this level will be stored
   self.scene = nil
   
+  -- Counter to track how many spawners have completed their spawning
   self.spawnersComplete = 0
+  
+  --initialize spawners based on the enemies configuration passed in params
   self.spawners = {}
   for i = 1, #params.enemies do
     
@@ -20,14 +29,14 @@ function Level:init(params)
   
 end
 
+-- Called when the level is entered, sets up the scene
 function Level:enter()
   
   self.scene = {}
   
-  --local enemy = EnemyFactory.createEnemy(BASE_ENEMY)
-  --self:addObject(enemy)
 end
 
+--updte function for the level
 function Level:update(dt)
   
   for i = 1, #self.spawners do
@@ -44,6 +53,7 @@ function Level:update(dt)
   
 end
 
+--draw function for the level
 function Level:draw()
   
   for i = 1, #self.scene do
@@ -57,15 +67,15 @@ function Level:draw()
   love.graphics.print(self.name, (Model.stage.stageWidth / 2) - 40, 10)
 end
 
+-- Called when the level is exited, cleans up the scene.
 function Level:exit()
   
   for i = 1, #self.scene do
     self.scene[i] = nil
   end
-  
-  --self.scene = nil
 end
 
+-- Adds an object to the scene
 function Level:addObject(object)
   
   if self.scene then
@@ -73,6 +83,7 @@ function Level:addObject(object)
   end
 end
 
+--removes an object from the scene
 function Level:removeObject(object)
   
   if not self.scene then
@@ -87,6 +98,7 @@ function Level:removeObject(object)
   end
 end
 
+--handle notifications from EventManager
 function Level:onNotify(event, args)
   
   args = args or {}

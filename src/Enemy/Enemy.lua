@@ -1,5 +1,6 @@
 local Enemy = classes.class()
 
+-- Static event for notifying when any enemy is destroyed
 Enemy.onAnyEnemyDestroyed = Event.new({type = ON_ANY_ENEMY_DESTROYED})
 
 function Enemy:init(params)
@@ -21,11 +22,14 @@ function Enemy:init(params)
   
   self.score = params.score
   
+  --Collision channel for registering collisions
   self.collisionChannel = params.collisionChannel
   
+  -- Bullet management for the enemy
   self.bulletPool = Pool.new({poolSize = params.bulletPoolSize})
   self:populateBulletPool()
   
+  --Implementation of component pattern, which allows us to have multiple enemy types by mixing and matching components. This way, we don't have to use inheritance
   self.components = params.components or {}
   
   --finding a reference to movement component
@@ -37,19 +41,22 @@ function Enemy:init(params)
   end
   
   if self.components[HEALTH_COMPONENT] then
-    
+    -- subscribe to the health zero event if the enemy has a health component
     EventManager:subscribe(self.components[HEALTH_COMPONENT].onHealthZero, self)
   end
   
+  -- Custom event triggered when this enemy is destroyed
   self.enemyDestroyedEvent = Event.new({sender = self, type = ON_ENEMY_DESTROYED})
   
 end
 
 function Enemy:update(dt)
   
+  -- Handle movement and shooting
   self:handleMovement(dt)
   self:handleShooting(dt)
   
+  -- Update all components
   for _, component in pairs(self.components) do
     if component.update then
       component:update(dt)
@@ -58,6 +65,7 @@ function Enemy:update(dt)
   
 end
 
+-- Draw the enemy
 function Enemy:draw()
   
   local newX = self.x - (self.width / 2)
@@ -65,9 +73,9 @@ function Enemy:draw()
   love.graphics.draw(self.asset, newX, newY)
 end
 
+-- Movement handling method
 function Enemy:handleMovement(dt)
   
-  --self.y = (self.y + self.speed * dt) % Model.stage.stageHeight
   if not self.movementComponent then
     return
   end
@@ -83,11 +91,13 @@ function Enemy:handleMovement(dt)
   
 end
 
+--checks if enemy has passed the bottom edge of the screen
 function Enemy:isOnScreen()
   
   return self.y <= Model.stage.stageHeight
 end
 
+-- Manage the shooting mechanism based on the fire rate
 function Enemy:handleShooting(dt)
   
   self.fireTimer = self.fireTimer + dt
@@ -114,6 +124,7 @@ function Enemy:handleShooting(dt)
   
 end
 
+-- Populate the bullet pool with bullet objects
 function Enemy:populateBulletPool()
     
   for i = 1, self.bulletPool:getPoolSize() do
@@ -125,6 +136,7 @@ function Enemy:populateBulletPool()
   end
 end
 
+--Handling events from EventManager
 function Enemy:onNotify(event, args)
   
   args = args or {}
@@ -143,12 +155,14 @@ function Enemy:onNotify(event, args)
   end
 end
 
+--helper function for adding a component
 function Enemy:addComponent(component)
   if component then
     table.insert(self.components, component)
   end
 end
 
+--Function responsible for handling collision
 function Enemy:handleCollision(args)
   
   
@@ -174,11 +188,13 @@ function Enemy:handleCollision(args)
   end
 end
 
+-- Destroy the enemy
 function Enemy:destroy()
   removeObjectFromScene(self)
   EventManager:notify(self.enemyDestroyedEvent, self)
 end
 
+-- Reset enemy properties to initial values
 function Enemy:resetValues()
   
   local healthComponent = self.components[HEALTH_COMPONENT]

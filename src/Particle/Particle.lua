@@ -1,3 +1,4 @@
+--particle effect that is being played for a certain duration, before being destroyed
 local Particle = classes.class()
 
 function Particle:init(params)

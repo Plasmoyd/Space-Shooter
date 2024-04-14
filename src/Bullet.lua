@@ -12,13 +12,13 @@ function Bullet:init(params)
   self.direction = params.direction
   self.damage = params.damage
   
-  self.parentId = params.parentId
-  
+  --collision channel for handling collision
   self.collisionChannel = params.collisionChannel
   
   self.bulletDestroyedEvent = Event.new({sender = self, type = ON_BULLET_DESTROYED})
 end
 
+-- Update method to handle the bullet's movement
 function Bullet:update(dt)
   
   --handling movement of the bullet
@@ -30,14 +30,18 @@ function Bullet:update(dt)
   end
 end
 
+-- Draws the bullet on the screen
 function Bullet:draw()
   
   local newX = self.x - (self.width / 2)
   local newY = self.y - (self.height / 2)
+  
+  -- Calculate rotation based on the direction
   local rotation = self.direction == PLAYER_BULLET_DIRECTION and 0 or math.pi
   love.graphics.draw(self.asset, newX, newY, rotation)
 end
 
+-- Helper method to check if the bullet is within the screen boundaries
 function Bullet:isOnScreen()
   
    if self.y < 0 or self.y > Model.stage.stageHeight or self.x < 0 or self.x > Model.stage.stageWidth then
@@ -47,6 +51,7 @@ function Bullet:isOnScreen()
    return true
 end
 
+-- Destroys the bullet, removing it from the scene and notifying interested parties
 function Bullet:destroy()
   removeObjectFromScene(self)
   EventManager:notify(self.bulletDestroyedEvent, self)

@@ -1,8 +1,8 @@
+--A player controlled class
 local Ship = classes.class()
 
 function Ship:init(params)
-    print("Ship init!")
-    self.id = PLAYER_ID
+    --populating ship attributes from the parameters
     self.speed = params.speed
     self.asset = params.asset
     self.explosionAsset = params.explosionAsset
@@ -15,14 +15,17 @@ function Ship:init(params)
     self.rateOfFire = params.rateOfFire
     self.fireTimer = params.rateOfFire
     
+    -- Collision channel to determine interactions with other objects
     self.collisionChannel = params.collisionChannel
     
     self.bulletPool = Pool.new({ poolSize = params.bulletPoolSize})
     self:populateBulletPool()
     
+    --uses component pattern for additional functionality
     self.components = {}
     self:populateComponents(params.components)
     
+    -- subscribe to the health zero event if the ship has a health component.
     if self.components[HEALTH_COMPONENT] then
       EventManager:subscribe(self.components[HEALTH_COMPONENT].onHealthZero, self)
     end
@@ -30,6 +33,7 @@ function Ship:init(params)
     EventManager:subscribe(onSpacebarPressed, self)
 end
 
+-- Populates the components of the ship based on the configuration provided
 function Ship:populateComponents(componentsInfo)
     
     for i = 1, #componentsInfo do
@@ -50,6 +54,7 @@ function Ship:update(dt)
     self:handleMovement(dt)
     self:handleTimer(dt)
     
+    -- Update each component
     for _, component in pairs(self.components) do
       if component.update then
         component:update(dt)
@@ -58,6 +63,7 @@ function Ship:update(dt)
     
 end
 
+-- Handles the movement of the ship based on player inputs
 function Ship:handleMovement(dt)
     local left = Model.movement.left
     local right = Model.movement.right
@@ -92,12 +98,14 @@ function Ship:handleMovement(dt)
     self.y = clamp(self.y + (movementVector.y * self.speed * dt), self.height / 2, Model.stage.stageHeight - self.height / 2)
 end
 
+-- Draw the ship on the screen.
 function Ship:draw()
     local newX = self.x - (self.width/2)
     local newY = self.y - (self.height/2)
     love.graphics.draw(self.asset, newX,newY )
 end
 
+-- Responds to notifications from the EventManager
 function Ship:onNotify(event, args)
   
     args = args or {}
@@ -117,6 +125,7 @@ function Ship:onNotify(event, args)
       
 end
 
+-- Conrols the ship's firing mechanism
 function Ship:shoot()
   
     if self.rateOfFire > self.fireTimer then
@@ -142,6 +151,7 @@ function Ship:handleTimer(dt)
     self.fireTimer = self.fireTimer + dt
 end
 
+-- Populates the bullet pool with pre-instantiated bullet objects
 function Ship:populateBulletPool()
     for i = 1, self.bulletPool:getPoolSize() do
       Model.bulletParams.direction = PLAYER_BULLET_DIRECTION
@@ -151,6 +161,7 @@ function Ship:populateBulletPool()
     end
 end
 
+-- Handles collision events
 function Ship:handleCollision(args)
   
     local collisionObject = args.collidedWith
@@ -162,6 +173,9 @@ function Ship:handleCollision(args)
     local healthComponent = self.components[HEALTH_COMPONENT]
     
     if healthComponent then
+      
+      ParticleSystem.playParticle(self.explosionAsset, self.explosionDuration, self.x, self.y)
+      
       if collisionObject.collisionChannel == BULLET_COLLISION_TYPE then
       
         healthComponent:takeDamage(collisionObject.damage)
@@ -169,11 +183,10 @@ function Ship:handleCollision(args)
         
         healthComponent:takeDamage(healthComponent.maxHealth)
       end
-      
-      ParticleSystem.playParticle(self.explosionAsset, self.explosionDuration, self.x, self.y)
     end
 end
 
+-- Destroys the ship and cleans up resources
 function Ship:destroy()
   
   removeObjectFromScene(self)

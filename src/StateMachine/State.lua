@@ -1,3 +1,4 @@
+--Interface that represents a state
 local State = classes.class()
 
 function State:init(params) end

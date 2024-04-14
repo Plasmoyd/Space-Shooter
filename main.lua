@@ -6,32 +6,37 @@ require("mobdebug").start()
 --this is to make prints appear right away in zerobrane
 io.stdout:setvbuf("no")
 
+-- Load all dependencies from the 'src/Dependencies.lua' script
 require 'src/Dependencies'
 
-
-local ship = nil
+--Global variables
 local stars = nil
 local gameLoopStateMachine = nil
 
+-- Global events
 onSpacebarPressed = nil --global event
 gameOverEvent = nil
 gameCompleteEvent = nil
 
 function love.load()
-    print("love.load")
+  
+    -- Initialize assets and model data
     AssetsManager.init()
     Model.init()
+    
+    --Instantiating an event manager
     eventManager = EventManager.new()
     
+    -- Initializing game events
     onSpacebarPressed = Event.new({type = ON_SPACEBAR_PRESSED})
     gameOverEvent = Event.new({type = ON_GAME_OVER})
     gameCompleteEvent = Event.new({type = ON_GAME_COMPLETE})
     
+    -- Setup the starfield background
     stars = StarsCls.new(Model.starsParams)
-    --levelManager = LevelManager.new(Model.levels)
     
+    --Initializing the game state machine, starting with main menu state
     gameLoopStateMachine = StateMachine.new()
-    
     gameLoopStateMachine:changeState(MainMenuState.new({stateMachine = gameLoopStateMachine}))
     
 end
@@ -39,7 +44,6 @@ end
 function love.update(dt)
   
   stars:update(dt)
-  --levelManager:update(dt)
   gameLoopStateMachine:update(dt)
 end
 
@@ -50,18 +54,6 @@ function love.draw()
     --levelManager:draw()
     gameLoopStateMachine:draw()
 end
-
---[[
-function instantiateObjectInScene(object)
-  
-    levelManager:addObjectToCurrentLevel(object)
-end
-
-function removeObjectFromScene(object)
-    
-    levelManager:removeObjectFromCurrentLevel(object)
-end
-]]
 
 function love.keypressed(key)
     print(key)
