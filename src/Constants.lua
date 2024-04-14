@@ -20,6 +20,7 @@ ON_SPAWNER_COMPLETE = "spawnerComplete"
 ON_LEVEL_COMPLETE = "levelComplete"
 ON_GAME_OVER = "gameOver"
 ON_GAME_COMPLETE = "gameComplete"
+ON_ANY_ENEMY_DESTROYED = "anyEnemyDestroyed"
 
 --bullet direction constants
 

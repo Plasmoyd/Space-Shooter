@@ -1,5 +1,7 @@
 local Enemy = classes.class()
 
+Enemy.onAnyEnemyDestroyed = Event.new({type = ON_ANY_ENEMY_DESTROYED})
+
 function Enemy:init(params)
   
   params.x = params.x or Model.stage.stageWidth / 2
@@ -16,6 +18,8 @@ function Enemy:init(params)
   
   self.rateOfFire = params.rateOfFire
   self.fireTimer = 0
+  
+  self.score = params.score
   
   self.collisionChannel = params.collisionChannel
   
@@ -134,8 +138,8 @@ function Enemy:onNotify(event, args)
     self.bulletPool:returnObject(args)
     
   elseif event.type == ON_HEALTH_ZERO then
+    EventManager:notify(Enemy.onAnyEnemyDestroyed, self)
     self:destroy()
-    
   end
 end
 

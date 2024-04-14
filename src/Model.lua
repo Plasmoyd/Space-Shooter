@@ -37,7 +37,8 @@ Model.enemyParams = {
     speed = 200,
     rateOfFire = 2,
     bulletPoolSize = 5,
-    explosionDuration = 0.3
+    explosionDuration = 0.3,
+    score = 100
 }
 
 Model.init = function()

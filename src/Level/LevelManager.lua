@@ -12,6 +12,8 @@ function LevelManager:init(params)
   self.ship = ShipCls.new(Model.shipParams)
   self:addObjectToCurrentLevel(self.ship)
   
+  self.scoreManager = ScoreManager.new()
+  
   self.collisionManager = CollisionManager.new(Model.collisionHandlers)
   
   print("Subscribing to level complete event")
@@ -31,6 +33,8 @@ function LevelManager:draw()
   if self.currentLevel and self.currentLevel.draw then
     self.currentLevel:draw()
   end
+  
+  self.scoreManager:draw()
 end
 
 function LevelManager:changeLevel()
