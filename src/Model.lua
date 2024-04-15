@@ -41,6 +41,10 @@ Model.enemyParams = {
     score = 100
 }
 
+Model.collectibleParams = {
+  speed = 100
+}
+
 Model.init = function()
     Model.stage = {
         stageHeight = love.graphics.getHeight(),
@@ -58,12 +62,17 @@ Model.init = function()
       
       [SHIP_COLLISION_TYPE] = {
         BULLET_COLLISION_TYPE,  
-        ENEMY_COLLISION_TYPE
+        ENEMY_COLLISION_TYPE,
+        COLLECTIBLE_COLLISION_TYPE
       },
       
       [BULLET_COLLISION_TYPE] = {
         SHIP_COLLISION_TYPE,
         ENEMY_COLLISION_TYPE
+      },
+      
+      [COLLECTIBLE_COLLISION_TYPE] = {
+        SHIP_COLLISION_TYPE
       }
     
     }
@@ -80,6 +89,7 @@ Model.init = function()
     Model.shipParams.collisionChannel = SHIP_COLLISION_TYPE
     Model.bulletParams.collisionChannel = BULLET_COLLISION_TYPE
     Model.enemyParams.collisionChannel = ENEMY_COLLISION_TYPE
+    Model.collectibleParams.collisionChannel = COLLECTIBLE_COLLISION_TYPE
     
     
     --define enemies here
@@ -141,6 +151,20 @@ Model.init = function()
       }
     }
     
+    --define collectible types here
+    
+    Model.collectibleTypes = {
+      
+      {
+        type = HEALTH_PACK,
+        asset = AssetsManager.sprites.health
+      },
+      
+      {
+        type = COIN,
+        asset = AssetsManager.sprites.coin
+      }
+    }
 
 end
 

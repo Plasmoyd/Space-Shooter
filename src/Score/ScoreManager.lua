@@ -7,7 +7,7 @@ function ScoreManager:init(params)
   
   --Subscribing to any enemy destroyed event 
   EventManager:subscribe(Enemy.onAnyEnemyDestroyed, self)
-  
+  EventManager:subscribe(Collectible.coinCollectedEvent, self)
 end
 
 --Draws the current score on the screen 
@@ -27,6 +27,8 @@ function ScoreManager:onNotify(event, args)
   
   if event.type == ON_ANY_ENEMY_DESTROYED then
     self.score = self.score + args.score
+  elseif event.type == ON_COIN_COLLECTED then
+    self.score = self.score + args
   end
 end
 

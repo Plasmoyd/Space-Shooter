@@ -172,6 +172,8 @@ function Enemy:handleCollision(args)
     return
   end
   
+  --TODO: Enemies are friendly firing. Change that if you have time
+  
   local healthComponent = self.components[HEALTH_COMPONENT]
   
   if healthComponent then

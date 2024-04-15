@@ -15,6 +15,9 @@ function Level:init(params)
   --scene container where all game objects for this level will be stored
   self.scene = nil
   
+  --spawn rate for collectibles in this level
+  self.collectibleSpawnRate = params.collectibleSpawnRate or 10
+  
   -- Counter to track how many spawners have completed their spawning
   self.spawnersComplete = 0
   
@@ -26,6 +29,8 @@ function Level:init(params)
     table.insert(self.spawners, spawner)
     EventManager:subscribe(spawner.spawnerCompleteEvent, self)
   end
+  
+  self.collectibleSpawner = CollectibleSpawner.new({collectibleTypes = Model.collectibleTypes, spawnRate = self.collectibleSpawnRate})
   
 end
 
@@ -43,6 +48,11 @@ function Level:update(dt)
     if self.spawners[i] and self.spawners[i].update then
       self.spawners[i]:update(dt)
     end
+  end
+  
+  if self.collectibleSpawner and self.collectibleSpawner.update then
+    
+    self.collectibleSpawner:update(dt)
   end
   
   for i = 1, #self.scene do

@@ -1,6 +1,8 @@
 --A player controlled class
 local Ship = classes.class()
 
+--ShipCls.coinCollectedEvent = Event.new({type = ON_COIN_COLLECTED})
+
 function Ship:init(params)
     --populating ship attributes from the parameters
     self.speed = params.speed
@@ -103,6 +105,9 @@ function Ship:draw()
     local newX = self.x - (self.width/2)
     local newY = self.y - (self.height/2)
     love.graphics.draw(self.asset, newX,newY )
+    
+    love.graphics.setFont(AssetsManager.fonts.spaceFont)
+    love.graphics.print("Health: " ..self.components[HEALTH_COMPONENT].currentHealth, Model.stage.stageWidth - 120, 10)
 end
 
 -- Responds to notifications from the EventManager
@@ -172,17 +177,31 @@ function Ship:handleCollision(args)
     
     local healthComponent = self.components[HEALTH_COMPONENT]
     
-    if healthComponent then
+    if not healthComponent then
+      return
+    end
+    
+    if collisionObject.collisionChannel == COLLECTIBLE_COLLISION_TYPE then
       
-      ParticleSystem.playParticle(self.explosionAsset, self.explosionDuration, self.x, self.y)
-      
-      if collisionObject.collisionChannel == BULLET_COLLISION_TYPE then
-      
-        healthComponent:takeDamage(collisionObject.damage)
-      elseif collisionObject.collisionChannel == ENEMY_COLLISION_TYPE then
+      if collisionObject.type == HEALTH_PACK then
         
-        healthComponent:takeDamage(healthComponent.maxHealth)
+        healthComponent:heal(collisionObject.value)
+      elseif collisionObject.type == COIN then
+        
+        --EventManager:notify(ShipCls.coinCollectedEvent, collisionObject.value)
       end
+    
+      return
+    end
+    
+    ParticleSystem.playParticle(self.explosionAsset, self.explosionDuration, self.x, self.y)
+      
+    if collisionObject.collisionChannel == BULLET_COLLISION_TYPE then
+      
+      healthComponent:takeDamage(collisionObject.damage)
+    elseif collisionObject.collisionChannel == ENEMY_COLLISION_TYPE then
+        
+      healthComponent:takeDamage(healthComponent.maxHealth)
     end
 end
 
